@@ -1,0 +1,102 @@
+Overview
+
+This script processes and visualizes MODIS (Moderate Resolution Imaging Spectroradiometer) satellite data stored in an HDF file. It lists the available subdatasets within the HDF file, extracts specific bands, and generates RGB images.
+Detailed Steps
+
+    Import Libraries:
+        os and warnings: Standard Python libraries for operating system operations and handling warnings.
+        matplotlib.pyplot: For plotting data.
+        rioxarray, xarray, and rasterio: Libraries for working with raster data.
+        earthpy.plot: For plotting spatial data.
+
+    Suppress Warnings:
+        warnings.simplefilter('ignore'): Suppresses all warnings to keep the output clean.
+
+    Set Working Directory:
+        os.chdir(r'C:\Users\cmcev\CSDA\MODIS_data_dir'): Changes the working directory to the specified path where the MODIS data is stored.
+
+    Define the Path to MODIS HDF File:
+        modis_path = "MOD09A1.A2024153.h10v04.061.2024162204214.hdf": Specifies the path to the MODIS HDF file.
+
+    List All Subdatasets:
+        Opens the HDF file and lists all the subdatasets within it, storing their names in the subdatasets list.
+        Prints the names of these subdatasets.
+
+    Function to Open and Plot a Subdataset:
+        Defines a function open_and_plot_subdataset(subdataset_name) that:
+            Opens a subdataset using rioxarray.
+            Plots the data using earthpy.plot.
+            Returns the data.
+
+    Load Each Band Individually:
+        Iterates over each subdataset, extracts its name, and loads its data using the defined function.
+        Stores the loaded data in a dictionary bands with band names as keys.
+
+    Combine Specific Bands into an RGB Image:
+        Defines the RGB bands to be used (sur_refl_b01, sur_refl_b04, sur_refl_b03 for Red, Green, Blue respectively).
+        Checks if all required RGB bands are loaded.
+        If available, stacks the bands along a new dimension using xarray.concat.
+        Plots the combined RGB image using earthpy.plot.plot_rgb.
+
+    Error Handling:
+        Prints a message if not all RGB bands are available.
+
+Dependencies
+
+    Python Libraries: os, warnings, matplotlib, rioxarray, xarray, rasterio, earthpy
+    External Tools: Ensure MODIS HDF file is available at the specified path.
+
+-------------------------------------------------------------------------------------------------
+
+import os
+import warnings
+import matplotlib.pyplot as plt
+import rioxarray as rxr
+import xarray as xr
+import rasterio as rio
+import earthpy.plot as ep
+
+warnings.simplefilter('ignore')
+
+# Set working directory
+os.chdir(r'C:\Users\cmcev\CSDA\MODIS_data_dir')
+
+# Path to MODIS HDF file
+modis_path = "MOD09A1.A2024153.h10v04.061.2024162204214.hdf"
+
+# List all subdatasets in the HDF file
+subdatasets = []
+with rio.open(modis_path) as src:
+    subdatasets = src.subdatasets
+    for name in subdatasets:
+        print(name)
+
+# Function to open and plot a subdataset
+def open_and_plot_subdataset(subdataset_name):
+    data = rxr.open_rasterio(subdataset_name, masked=True).squeeze()
+    print(data)
+    ep.plot_bands(data, figsize=(10, 6))
+    plt.show()
+    return data
+
+# Load each band individually
+bands = {}
+for subdataset in subdatasets:
+    band_name = subdataset.split(":")[-1]
+    bands[band_name] = open_and_plot_subdataset(subdataset)
+
+# Combine specific bands into an RGB image
+rgb_bands = ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03']  # Order: R, G, B
+
+# Check if all required bands are loaded
+if all(band in bands for band in rgb_bands):
+    # Stack bands along a new dimension using xarray.concat
+    rgb_data = xr.concat([bands[band] for band in rgb_bands], dim="band")
+    
+    # Plot RGB image
+    ep.plot_rgb(rgb_data.values,
+                rgb=[0, 1, 2],  # Index for R, G, B
+                title='RGB Image of MODIS Data')
+    plt.show()
+else:
+    print("Not all RGB bands are available.")
