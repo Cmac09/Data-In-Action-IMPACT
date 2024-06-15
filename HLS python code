@@ -1,0 +1,69 @@
+Overview
+
+This script processes HLS (HLS Sentinel-2-like) satellite data stored as individual TIF files representing different spectral bands. It stacks these bands into a single array and visualizes them as an RGB image using EarthPy.
+Detailed Steps
+
+    Import Libraries:
+        os: For interacting with the operating system.
+        glob: For file path pattern matching.
+        matplotlib.pyplot: For plotting data.
+        earthpy: Core EarthPy library.
+        earthpy.spatial: EarthPy's spatial processing functions.
+        earthpy.plot: EarthPy's plotting functions.
+
+    Define HLS Data Directory:
+        hls_data_path = r"C:\Users\cmcev\CSDA\HLS_data_dir": Specifies the directory where HLS data (TIF files) are stored.
+
+    Generate Paths for Each Band:
+        Uses glob to generate lists (band2_paths, band3_paths, band4_paths) of file paths for each band (B02.tif, B03.tif, B04.tif) within the hls_data_path.
+
+    Stack HLS Bands:
+        Concatenates all band paths (hls_paths) into a single list and sorts them.
+        Uses earthpy.spatial.stack (es.stack) to stack these bands into a single NumPy array (hls_stack).
+        Retrieves metadata (hls_meta_data) associated with the stacked array.
+
+    Plot HLS Data as RGB Image:
+        Uses earthpy.plot_rgb (ep.plot_rgb) to plot the stacked HLS data (hls_stack) as an RGB image.
+        Specifies the order of bands for RGB composition (rgb=[2, 1, 0] corresponds to B04 as Red, B03 as Green, and B02 as Blue).
+        Applies a linear stretch to enhance contrast (stretch="linear").
+
+    Display the Plot:
+        Uses plt.show() to display the RGB image plot.
+
+Dependencies
+
+    Python Libraries: os, glob, matplotlib, earthpy
+    External Tools: Ensure HLS TIF files are correctly located and named within the specified directory.
+
+Notes
+
+    This script is useful for visualizing HLS satellite data, typically derived from Sentinel-2 imagery, providing insights into surface reflectance across different spectral bands.
+    Ensure that the HLS data directory (hls_data_path) is correctly set to match the actual directory where your HLS TIF files are stored.
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+import os
+from glob import glob
+import matplotlib.pyplot as plt
+import earthpy as et
+import earthpy.spatial as es
+import earthpy.plot as ep
+
+# Define the directory where your HLS data is stored
+hls_data_path = r"C:\Users\cmcev\CSDA\HLS_data_dir"
+
+# Generate a list of TIF files for each band
+band2_paths = glob(os.path.join(hls_data_path, "HLS.S30.T14TQL.2024144T170851.v2.0.B02.tif"))
+band3_paths = glob(os.path.join(hls_data_path, "HLS.S30.T14TQL.2024144T170851.v2.0.B03.tif"))
+band4_paths = glob(os.path.join(hls_data_path, "HLS.S30.T14TQL.2024144T170851.v2.0.B04.tif"))
+
+# Stack the HLS bands
+# This creates a numpy array with each "layer" representing a single band
+# You can use the nodata= parameter to mask nodata values
+hls_paths = band2_paths + band3_paths + band4_paths
+hls_paths.sort()
+hls_stack, hls_meta_data = es.stack(hls_paths, nodata=-9999)
+
+# Plot the HLS data as an RGB image with a linear stretch
+ep.plot_rgb(hls_stack, rgb=[2, 1, 0], stretch="linear")
+plt.show()
