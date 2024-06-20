@@ -1,0 +1,97 @@
+This script opens a TIFF file containing multispectral satellite imagery, extracts specific bands (Red, Green, Blue), and displays a brightened RGB image using rasterio, numpy, and matplotlib.
+Detailed Steps
+
+    Import Libraries:
+        rasterio: For reading and manipulating raster data (TIFF files).
+        numpy: For numerical operations on arrays.
+        matplotlib.pyplot: For plotting and visualizing data.
+
+    Define TIFF File Path:
+        tiff_file_path = r"C:\Users\cmcev\CSDA\PI_OH_NE_6_14_24_psscene_analytic_sr_udm2\PSScene\20240507_172341_76_2479_3B_AnalyticMS_SR_clip.tif": Specifies the path to the TIFF file containing the satellite imagery data.
+
+    Define Band Indices:
+        red_band_index = 3: Specifies the index of the Red band (1-based index).
+        green_band_index = 2: Specifies the index of the Green band (1-based index).
+        blue_band_index = 1: Specifies the index of the Blue band (1-based index).
+
+    Define Brightening Factor:
+        brightening_factor = 2.0: Controls the brightness of the RGB image. Increasing this value makes the image brighter.
+
+    Open and Read TIFF File:
+        Uses rasterio.open to open the TIFF file (tiff_file_path) in a context manager (with statement).
+        Prints a success message once the TIFF file is opened.
+
+    Read Red, Green, and Blue Bands:
+        Uses src.read to read data from the specified bands (red_band_index, green_band_index, blue_band_index) within the TIFF file.
+        Stores each band's data (red, green, blue) in separate NumPy arrays.
+
+    Stack Bands into RGB Image:
+        Uses np.dstack to stack the individual bands (red, green, blue) into a single RGB image array (rgb).
+
+    Normalize RGB Data:
+        Normalizes the RGB image data (rgb) to a range of 0-1 using:
+
+        python
+
+        rgb_normalized = (rgb - rgb.min()) / (rgb.max() - rgb.min())
+
+    Apply Brightening Factor:
+        Multiplies the normalized RGB image (rgb_normalized) by the brightening_factor.
+        Clips the resulting values to ensure they stay within the range [0, 1] using np.clip.
+
+    Display Brightened RGB Image:
+        Uses plt.imshow to display the brightened RGB image (rgb_brightened).
+        Sets a title (plt.title('Brightened RGB Image')) for the plot.
+        Turns off axes (plt.axis('off')) for cleaner presentation.
+        Finally, shows the plot using plt.show().
+
+Dependencies
+
+    Python Libraries: rasterio, numpy, matplotlib
+    External Tools: Ensure the TIFF file (tiff_file_path) exists at the specified location.
+
+Notes
+
+    This script provides a basic workflow for opening, processing, and visualizing multispectral satellite imagery in RGB format.
+    Adjust the brightening_factor to control the brightness of the displayed RGB image.
+
+-------------------------------------------------------------------------------------------------------------
+
+import rasterio
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Path to the TIFF file
+tiff_file_path = r"C:\Users\cmcev\CSDA\PI_OH_NE_6_14_24_psscene_analytic_sr_udm2\PSScene\20240507_172341_76_2479_3B_AnalyticMS_SR_clip.tif"
+
+# Band indices for Red, Green, and Blue (1-based indices)
+red_band_index = 3
+green_band_index = 2
+blue_band_index = 1
+
+# Brightening factor
+brightening_factor = 2.0  # Increase to make the image brighter
+
+# Open the TIFF file
+with rasterio.open(tiff_file_path) as src:
+    print(f"TIFF file opened successfully: {tiff_file_path}")
+    
+    # Read the Red, Green, and Blue bands
+    red = src.read(red_band_index)
+    green = src.read(green_band_index)
+    blue = src.read(blue_band_index)
+    
+    # Stack the bands into an RGB image
+    rgb = np.dstack((red, green, blue))
+    
+    # Normalize the data to 0-1 for display
+    rgb_normalized = (rgb - rgb.min()) / (rgb.max() - rgb.min())
+    
+    # Apply the brightening factor
+    rgb_brightened = np.clip(rgb_normalized * brightening_factor, 0, 1)
+
+    # Display the brightened RGB image
+    plt.imshow(rgb_brightened)
+    plt.title('Brightened RGB Image')
+    plt.axis('off')
+    plt.show()
