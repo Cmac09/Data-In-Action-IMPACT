@@ -4,6 +4,8 @@ Comparative Analysis of Spatial Resolution in Commercial Data and NASA Mission P
 Overview
 
 Welcome to the GitHub repository for "Comparative Analysis of Spatial Resolution in Commercial Data and NASA Mission Products." This project explores how spatial resolution influences the precision and applicability of satellite imagery in Earth observation. We delve into the capabilities of MODIS, Landsat, Planet, and Maxar, comparing their strengths in various applications.
+
+
 Introduction
 
 Spatial resolution is a critical factor in Earth observation, shaping the precision and richness of satellite imagery. Higher spatial resolution allows for more detailed analysis and is essential for applications requiring fine-scale observations, such as urban planning and precision agriculture. Conversely, moderate resolution is more suited for broader-scale environmental monitoring and land use changes. This project aims to compare the spatial resolution of commercial satellite data with standard NASA mission products, focusing on MODIS, Landsat, Planet, and Maxar.
