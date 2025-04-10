@@ -38,19 +38,6 @@ Case Studies
 
   -------------------------------------------------------------------------------------------------
 
-  Natural Water/Land Features in Palm Jumeirah:
-  The artificial island of Palm Jumeirah faces unique challenges in managing its natural and built environments.
-        
-  - MODIS observes large water bodies and broad environmental trends.
-  
-  - Landsat offers detailed views of water bodies, wetlands, and land cover changes.
-  
-  - Planet captures fluctuations in water levels and small-scale changes with high frequency.
-  
-  - Maxar provides detailed imagery for coastal planning and wetland monitoring.
-
-  ------------------------------------------------------------------------------------------------
-
 Conclusion
 
 The choice of satellite data for monitoring urban to agriculture transitions and natural water/land features depends on the required scale and precision. While NASA mission products like MODIS and Landsat provide valuable insights at moderate to high resolutions, commercial providers such as Planet and Maxar offer the flexibility to choose resolutions tailored to specific needs, from broad-scale monitoring to detailed, high-precision analysis. This diversity in spatial resolution options enhances our ability to understand and manage dynamic changes in urban and natural landscapes.
