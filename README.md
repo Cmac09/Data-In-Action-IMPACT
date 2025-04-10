@@ -23,7 +23,7 @@ Comparison of Platforms
 
 -----------------------------------------------------------------------------------------------------------------------
 
-Case Studies
+Case Studie
 
   Urban to Agriculture Transition in Omaha, NE:
   In Omaha, NE, urban sprawl is encroaching on fertile farmland, presenting challenges for farmers.
